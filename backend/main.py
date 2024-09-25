@@ -1,8 +1,9 @@
-from flask import Flask
+from flask import Flask, jsonify, request
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
-from flask import jsonify
 from datetime import datetime
+
+from extension import db
+from models import Task
 
 app = Flask(__name__)
 CORS(app)
@@ -10,7 +11,7 @@ CORS(app)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydatabase.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-db = SQLAlchemy(app)
+db.init_app(app)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -21,7 +22,7 @@ def index():
     return "<h1>Homepage</h1>"
 
 @app.route("/get_current_date", methods=["GET", "POST"])
-def get_current_date() -> str:
+def get_current_date():
     """
     Get current date
 
@@ -31,7 +32,46 @@ def get_current_date() -> str:
     current_date = datetime.now().strftime("%B %d, %Y")
     return jsonify({"current_date": current_date})
 
+
+@app.route("/add_task", methods=["POST"])
+def add_task():
+    """
+    Add a new task to the database
+    """
+
+    current_date = datetime.now()
+    content = request.json.get("taskContent")
+
+    new_task = Task(date=current_date, content=content, completed=False)
+
+    db.session.add(new_task)
+    db.session.commit()
+
+    return {"message": "Task added"}, 201
+
+@app.route("/get_all_tasks", methods=["GET", "POST"])
+def get_all_tasks():
+    """
+    Get all tasks from database
+    """
+
+    tasks = Task.query.all()
+    json_tasks = []
+    
+    for task in tasks:
+        json_task = {
+            "id": task.id,
+            "date": task.date.strftime("%m/%d/%Y"),
+            "content": task.content,
+            "completed": task.completed
+        }
+        json_tasks.append(json_task)
+
+    return jsonify({"tasks": json_tasks})
+
+
 if __name__ == '__main__':
+
     with app.app_context():
         db.create_all()
     

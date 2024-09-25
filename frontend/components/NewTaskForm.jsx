@@ -11,8 +11,23 @@ function NewTaskForm({currentDateProp}) {
         setTaskContent(userInput)
     }
 
-    const testSubmit = function () {
-        console.log(taskContent)
+    const testSubmit = async function (e) {
+        // e.preventDefault()
+        
+        const data = {
+            taskContent
+        }
+
+        const url = "http://127.0.0.1:5000/add_task"
+        const options = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        }
+
+        const response = await fetch(url, options)
     }
 
     return (
