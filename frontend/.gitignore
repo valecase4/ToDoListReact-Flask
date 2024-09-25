@@ -23,8 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
-package.json
 README.md
 vite.config.js 
 *.config.js
-package-lock.js
+package-lock.json
