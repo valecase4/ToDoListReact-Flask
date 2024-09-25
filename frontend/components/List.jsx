@@ -8,7 +8,7 @@ function List({tasks}) {
         <div className="list">
             {tasks.map(task => (
                 <div key={task.id}>
-                    <Task content={task.content} />
+                    <Task id={task.id} content={task.content} />
                 </div>
             ))}
         </div>

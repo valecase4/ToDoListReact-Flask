@@ -12,7 +12,7 @@ function NewTaskForm({currentDateProp}) {
     }
 
     const testSubmit = async function (e) {
-        // e.preventDefault()
+        e.preventDefault()
         
         const data = {
             taskContent
@@ -28,6 +28,8 @@ function NewTaskForm({currentDateProp}) {
         }
 
         const response = await fetch(url, options)
+
+        window.location.reload()
     }
 
     return (
@@ -47,7 +49,7 @@ function NewTaskForm({currentDateProp}) {
             <div className="form-row">
                 <button
                 type='submit'
-                disabled={taskContent.length == 0 ? true : false}
+                disabled={taskContent.length == 0 || taskContent.length > 30 ? true : false}
                 >
                     Add new task
                 </button>

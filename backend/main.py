@@ -42,7 +42,7 @@ def add_task():
     current_date = datetime.now()
     content = request.json.get("taskContent")
 
-    new_task = Task(date=current_date, content=content, completed=False)
+    new_task = Task(date=current_date, content=content)
 
     db.session.add(new_task)
     db.session.commit()
@@ -62,12 +62,21 @@ def get_all_tasks():
         json_task = {
             "id": task.id,
             "date": task.date.strftime("%m/%d/%Y"),
-            "content": task.content,
-            "completed": task.completed
+            "content": task.content
         }
         json_tasks.append(json_task)
 
     return jsonify({"tasks": json_tasks})
+
+@app.route("/delete_task/<int:task_id>", methods=["GET", "DELETE"])
+def delete_task(task_id):
+    task = Task.query.get(task_id)
+    print(task)
+
+    db.session.delete(task)
+    db.session.commit()
+
+    return {"message": "Task deleted"}, 200
 
 
 if __name__ == '__main__':
