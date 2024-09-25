@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react"
+import { createRef, useEffect, useState } from "react"
 import "./App.css"
+import NewTaskForm from "../components/NewTaskForm"
 
 function App() {
     const [currentDate, setCurrentDate] = useState('')
@@ -12,9 +13,17 @@ function App() {
     })
 
     return (
-        <>
-            <h1>{currentDate}</h1>
-        </>
+        <div className="wrapper">
+            <div className="current-date">
+                <h1>{currentDate}</h1>
+            </div>
+            <div className="container">
+                <div className="frame">
+                    <NewTaskForm currentDateProp={currentDate}/>
+                </div>
+                <div className="frame"></div>
+            </div>
+        </div>
     )
 }
 

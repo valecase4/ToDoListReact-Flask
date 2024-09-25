@@ -1,10 +1,16 @@
 from flask import Flask
 from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify
 from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydatabase.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -26,6 +32,9 @@ def get_current_date() -> str:
     return jsonify({"current_date": current_date})
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    
     app.run(debug=True)
 
 
